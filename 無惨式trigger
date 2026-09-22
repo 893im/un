@@ -1,0 +1,10 @@
+local P=game.Players.LocalPlayer local R=game:GetService("RunService") local U=game:GetService("UserInputService")
+local C,H=50000,90 local stop=false
+local G=Instance.new("ScreenGui",P.PlayerGui) G.ResetOnSpawn=false G.IgnoreGuiInset=true G.DisplayOrder=999999
+local I=Instance.new("ImageLabel",G) I.Size=UDim2.fromScale(1,1) I.Image="rbxassetid://70918699492961" I.ZIndex=999999 I.ScaleType=Enum.ScaleType.Stretch
+local F=Instance.new("Folder",workspace.CurrentCamera) local ps={}
+for i=1,C do local p=Instance.new("Part",F) p.Size=Vector3.one*.25 p.Shape=Enum.PartType.Ball p.Anchored=true p.CanCollide=false p.CanTouch=false p.CanQuery=false p.CastShadow=false ps[i]=p end
+local function L(c)local r=c:WaitForChild("HumanoidRootPart")local q=r.Position+Vector3.yAxis*H local x x=R.RenderStepped:Connect(function()if stop or not r.Parent then x:Disconnect()return end r.CFrame=CFrame.new(q)r.AssemblyLinearVelocity=Vector3.zero r.AssemblyAngularVelocity=Vector3.zero end)end
+if P.Character then L(P.Character)end P.CharacterAdded:Connect(function(c)if not stop then task.wait()L(c)end end)
+local a=0 R.RenderStepped:Connect(function(d)if stop then return end local r=P.Character and P.Character:FindFirstChild("HumanoidRootPart")if not r then return end a+=d*2 for i,p in ipairs(ps)do local x=i/C*math.pi*2+a p.Position=r.Position+Vector3.new(math.cos(x)*5,math.sin(x*3)*2,math.sin(x)*5)end end)
+U.InputBegan:Connect(function(i,g)if not g and i.KeyCode==Enum.KeyCode.P then stop=true F:Destroy()G:Destroy()end end)
